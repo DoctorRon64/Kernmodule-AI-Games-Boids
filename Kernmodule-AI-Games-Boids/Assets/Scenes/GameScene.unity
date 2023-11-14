@@ -444,8 +444,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BoidAmount: 100
-  FieldSize: 10
+  FieldSize: 30
   BoidPrefab: {fileID: 1863075945198889993, guid: d783ed48bd496b34aac69829fd1d491c, type: 3}
   boidList: []
   transformList: []
-  DistancePerBoid: 2
+  DistancePerBoid: 3
