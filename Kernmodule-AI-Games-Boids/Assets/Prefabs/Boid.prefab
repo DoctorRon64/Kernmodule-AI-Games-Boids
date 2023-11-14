@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1863075945198889998}
-  - component: {fileID: 1863075945198889999}
+  - component: {fileID: 1841676205789565215}
   m_Layer: 0
   m_Name: Boid
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1863075945198889999
+--- !u!114 &1841676205789565215
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,11 +42,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1863075945198889993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 300124661d18e6340b41ae0a58408622, type: 3}
+  m_Script: {fileID: 11500000, guid: ed676221bfb112e4b943abd94d60b934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Velocity: {x: 0, y: 0, z: 0}
-  Position: {x: 0, y: 0, z: 0}
 --- !u!1 &3229150472494976454
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,7 +74,7 @@ Transform:
   m_GameObject: {fileID: 3229150472494976454}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1863075945198889998}

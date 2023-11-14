@@ -5,14 +5,16 @@ using UnityEngine;
 public class BoidManager : MonoBehaviour
 {
     [Header("Spawning")]
-    [SerializeField] private int BoidAmount = 100;
-    [SerializeField] private float FieldSize = 1f;
-    [SerializeField] GameObject BoidPrefab;
+    [SerializeField] private int boidAmount = 100;
+    [SerializeField] private float fieldSize = 1f;
+    [SerializeField] GameObject boidPrefab;
 
     [Header("Boids")]
     [SerializeField] private List<Boid> boidList;
     [SerializeField] private List<Transform> transformList;
-    [SerializeField] private float DistancePerBoid;
+    [SerializeField] private float distancePerBoid;
+    [SerializeField] private float boundingEdgeSize = 10f;
+	[SerializeField] private float limitSpeedValue = 1f;
 
     private void Awake()
     {
@@ -24,17 +26,15 @@ public class BoidManager : MonoBehaviour
         UpdateBoidPositions();
     }
 
-
     private void SpawnBoids()
     {
-        for (int i = 0; i < BoidAmount; i++)
+        for (int i = 0; i < boidAmount; i++)
         {
-            float x = Random.Range(0, FieldSize);
-            float z = Random.Range(0, FieldSize);
-            float y = Random.Range(0, FieldSize);
+            float x = Random.Range(0, fieldSize);
+            float z = Random.Range(0, fieldSize);
+            float y = Random.Range(0, fieldSize);
             Vector3 BoidSpawnPos = new Vector3(x, y, z);
-            Boid newBoid = Instantiate(BoidPrefab, BoidSpawnPos, Quaternion.identity).GetComponent<Boid>();
-            newBoid.Position = BoidSpawnPos;
+            Boid newBoid = Instantiate(boidPrefab, BoidSpawnPos, Quaternion.identity).GetComponent<Boid>();
             transformList.Add(newBoid.transform);
             boidList.Add(newBoid);
         }
@@ -53,25 +53,26 @@ public class BoidManager : MonoBehaviour
             Rule2 = Separation(b);
             Rule3 = Alignment(b);
             Rule4 = BoundToArea(b);
-            b.Velocity = b.Velocity + Rule1 + Rule2 + Rule3;
+            b.Velocity = b.Velocity + Rule1 + Rule2 + Rule3 + Rule4;
+
             LimitSpeed(b);
-            b.transform.position = b.Position + b.Velocity;
+
+            b.transform.position = b.transform.position + b.Velocity;
         }
     }
 
     private Vector3 Cohesion(Boid _CurrentBoid)
     {
         Vector3 Center = new Vector3();
-
         foreach (Boid b  in boidList)
         {
             if (b.transform.position != Center)
             {
                 Center += b.transform.position;
             }
-            Center /= BoidAmount - 1;
+            Center /= boidAmount - 1;
         }
-        return (Center - _CurrentBoid.Position) / 100f;
+        return (Center - _CurrentBoid.transform.position) / 100f;
     }
 
     private Vector3 Separation(Boid _CurrentBoid)
@@ -83,9 +84,9 @@ public class BoidManager : MonoBehaviour
         {
             if (b !=  _CurrentBoid)
             {
-                if (Vector3.Distance(b.transform.position, _CurrentBoid.Position) < DistancePerBoid)
+                if (Vector3.Distance(b.transform.position, _CurrentBoid.transform.position) < distancePerBoid)
                 {
-                    Center = Center - (b.transform.position - _CurrentBoid.Position);
+                    Center = Center - (b.transform.position - _CurrentBoid.transform.position);
                 }
             }
         }
@@ -104,14 +105,13 @@ public class BoidManager : MonoBehaviour
             }
         }
 
-        pvJ /= BoidAmount - 1;
+        pvJ /= boidAmount - 1;
         return (pvJ - _CurrentBoid.Velocity) / 8;
     }
 
     private void LimitSpeed(Boid _CurrentBoid)
     {
-        float Vlim = 3;
-        Vector3 Temp = new Vector3(Vlim, Vlim, Vlim);
+        float Vlim = limitSpeedValue;
         float boidVelocityMagnitude = _CurrentBoid.Velocity.magnitude;
         if (boidVelocityMagnitude > Vlim)
         {
@@ -122,35 +122,35 @@ public class BoidManager : MonoBehaviour
     private Vector3 BoundToArea(Boid _CurrentBoid)
     {
         float Xmin = 0f;
-        float Xmax = FieldSize;
+        float Xmax = fieldSize;
         float Ymin = 0f;
-        float Ymax = FieldSize;
+        float Ymax = fieldSize;
         float Zmin = 0f;
-        float Zmax = FieldSize;
+        float Zmax = fieldSize;
         Vector3 BoundingDirection = new Vector3();
 
         if (_CurrentBoid.transform.position.x < Xmin)
         {
-            BoundingDirection.x = 10; 
+            BoundingDirection.x = boundingEdgeSize; 
         } else if (_CurrentBoid.transform.position.x > Xmax)
         {
-            BoundingDirection.x = -10;
-        }
+            BoundingDirection.x = -boundingEdgeSize;
+		}
 
         if (_CurrentBoid.transform.position.y < Ymin)
         {
-            BoundingDirection.y = 10;
+            BoundingDirection.y = boundingEdgeSize;
         } else if (_CurrentBoid.transform.position.y > Ymax)
         {
-            BoundingDirection.y = -10;
+            BoundingDirection.y = -boundingEdgeSize;
         }
 
         if (_CurrentBoid.transform.position.z < Zmin)
         {
-            BoundingDirection.z = 10;
+            BoundingDirection.z = boundingEdgeSize;
         } else if (_CurrentBoid.transform.position.z  > Zmax)
         {
-            BoundingDirection.z = -10;
+            BoundingDirection.z = -boundingEdgeSize;
         }
 
         return BoundingDirection;
