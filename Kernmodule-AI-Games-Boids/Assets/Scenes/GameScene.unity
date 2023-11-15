@@ -345,7 +345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936fbd5771b994a40a34d35ca4cd5280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boidAmount: 100
+  boidAmount: 200
   fieldSize: 10
   boidPrefab: {fileID: 1863075945198889993, guid: d783ed48bd496b34aac69829fd1d491c, type: 3}
   boidList: []
@@ -355,6 +355,6 @@ MonoBehaviour:
   CohesionValue: 10
   limitSpeedValue: 0.1
   AlingmentValue: 8
-  CohesionDebug: 5
-  SeperationDebug: 10
-  AlingmentDebug: 6
+  CohesionDebug: 1
+  SeperationDebug: 1
+  AlingmentDebug: 0.02

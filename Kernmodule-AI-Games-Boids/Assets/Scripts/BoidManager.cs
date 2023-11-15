@@ -52,32 +52,28 @@ public class BoidManager : MonoBehaviour
         Vector3 Rule1 = new Vector3();
         Vector3 Rule2 = new Vector3();
         Vector3 Rule3 = new Vector3();
-        Vector3 Rule4 = new Vector3();
 
         foreach (Boid b in boidList)
         {
             b.Velocity += Cohesion(b) * CohesionDebug;
             b.Velocity += Separation(b) * SeperationDebug;
             b.Velocity += Alignment(b) * AlingmentDebug;
-            b.Velocity += BoundToArea(b);
 
-            Debug.Log( "RULE1" + this + Rule1);
-            Debug.Log("RULE2" + this + Rule2);
-            Debug.Log("RULE3" + this + Rule3);
+            Debug.Log( "RULE1"  + Rule1);
+            Debug.Log("RULE2"  + Rule2);
+            Debug.Log("RULE3"  + Rule3);
 
             LimitSpeed(b);
             b.transform.position += b.Velocity;
-
-            b.Velocity = Vector3.zero;
         }
     }
 
     private Vector3 Cohesion(Boid _CurrentBoid)
     {
-        Vector3 CohesionVector = new Vector3();
-        foreach (Boid OtherBoid in boidList)
+        Vector3 CohesionVector = Vector3.zero;
+        foreach (Boid otherBoid in boidList)
         {
-            if (_CurrentBoid.transform.position != CohesionVector)
+            if (otherBoid != _CurrentBoid)
             {
                 //Count all of the postions onto one vector;
                 CohesionVector += _CurrentBoid.transform.position;
@@ -85,40 +81,46 @@ public class BoidManager : MonoBehaviour
         }
         //devide by all of the boids - the currentone
         CohesionVector /= boidList.Count - 1;
-        return (CohesionVector - _CurrentBoid.transform.position) / CohesionValue;
+        CohesionVector.Normalize();
+        CohesionVector -= _CurrentBoid.transform.position;
+        CohesionVector.Normalize();
+        return CohesionVector;
     }
 
     private Vector3 Separation(Boid _CurrentBoid)
     {
-        Vector3 SeparateVector = new Vector3();
-        SeparateVector = Vector3.zero;
+        Vector3 SeparateVector = Vector3.zero;
 
         foreach(Boid otherBoid in boidList)
         {
-            if (otherBoid.transform.position != _CurrentBoid.transform.position)
+            if (otherBoid != _CurrentBoid)
             {
                 //if a boid is close by then
                 if (Vector3.Distance(_CurrentBoid.transform.position, otherBoid.transform.position) < distancePerBoid)
                 {
-                    SeparateVector += (_CurrentBoid.transform.position - otherBoid.transform.position);
+                    SeparateVector += _CurrentBoid.transform.position - otherBoid.transform.position;
                 }
             }
         }
+        SeparateVector.Normalize();
         return SeparateVector;
     }
 
     private Vector3 Alignment(Boid _CurrentBoid)
     {
-        Vector3 AlignmentVector = new Vector3();
-        foreach (Boid b in boidList)
+        Vector3 AlignmentVector = Vector3.zero;
+        foreach (Boid otherBoid in boidList)
         {
-            if (b != _CurrentBoid)
+            if (otherBoid != _CurrentBoid)
             {
-                AlignmentVector += b.Velocity;
+                AlignmentVector += otherBoid.Velocity;
             }
         }
         AlignmentVector /= boidAmount - 1;
-        return (AlignmentVector - _CurrentBoid.Velocity) / AlingmentValue;
+        AlignmentVector.Normalize();
+        AlignmentVector = AlignmentVector - _CurrentBoid.Velocity;
+        AlignmentVector.Normalize();
+        return AlignmentVector;
     }
 
     private void LimitSpeed(Boid _CurrentBoid)
@@ -129,42 +131,5 @@ public class BoidManager : MonoBehaviour
         {
             _CurrentBoid.Velocity = (_CurrentBoid.Velocity / boidVelocityMagnitude) * Vlim;
         }
-    }
-
-    private Vector3 BoundToArea(Boid _CurrentBoid)
-    {
-        float Xmin = 0f;
-        float Xmax = fieldSize;
-        float Ymin = 0f;
-        float Ymax = fieldSize;
-        float Zmin = 0f;
-        float Zmax = fieldSize;
-        Vector3 BoundingDirection = new Vector3();
-
-        if (_CurrentBoid.transform.position.x < Xmin)
-        {
-            BoundingDirection.x = boundingEdgeSize; 
-        } else if (_CurrentBoid.transform.position.x > Xmax)
-        {
-            BoundingDirection.x = -boundingEdgeSize;
-		}
-
-        if (_CurrentBoid.transform.position.y < Ymin)
-        {
-            BoundingDirection.y = boundingEdgeSize;
-        } else if (_CurrentBoid.transform.position.y > Ymax)
-        {
-            BoundingDirection.y = -boundingEdgeSize;
-        }
-
-        if (_CurrentBoid.transform.position.z < Zmin)
-        {
-            BoundingDirection.z = boundingEdgeSize;
-        } else if (_CurrentBoid.transform.position.z  > Zmax)
-        {
-            BoundingDirection.z = -boundingEdgeSize;
-        }
-
-        return BoundingDirection;
     }
 }
