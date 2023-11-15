@@ -342,14 +342,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 2077111401}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 628817217027dd6418b3ceb61e516ab4, type: 3}
+  m_Script: {fileID: 11500000, guid: 936fbd5771b994a40a34d35ca4cd5280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   boidAmount: 100
   fieldSize: 10
-  boidPrefab: {fileID: 1863075945198889993, guid: b816962c3e314944e86d0a7768e9203b, type: 3}
+  boidPrefab: {fileID: 1863075945198889993, guid: d783ed48bd496b34aac69829fd1d491c, type: 3}
   boidList: []
   transformList: []
-  distancePerBoid: 0.6
-  boundingEdgeSize: 10
-  limitSpeedValue: 0.4
+  distancePerBoid: 3
+  boundingEdgeSize: 5
+  CohesionValue: 10
+  limitSpeedValue: 0.1
+  AlingmentValue: 8
+  CohesionDebug: 5
+  SeperationDebug: 10
+  AlingmentDebug: 6

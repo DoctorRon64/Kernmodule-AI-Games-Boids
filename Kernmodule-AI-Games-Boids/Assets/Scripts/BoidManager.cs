@@ -14,14 +14,21 @@ public class BoidManager : MonoBehaviour
     [SerializeField] private List<Transform> transformList;
     [SerializeField] private float distancePerBoid;
     [SerializeField] private float boundingEdgeSize = 10f;
-	[SerializeField] private float limitSpeedValue = 1f;
+    [SerializeField] private float CohesionValue = 10f;
+    [SerializeField] private float limitSpeedValue = 1f;
+    [SerializeField] private float AlingmentValue = 8f;
+
+    [Header("Boids")]
+    [SerializeField] private float CohesionDebug;
+    [SerializeField] private float SeperationDebug;
+    [SerializeField] private float AlingmentDebug;
 
     private void Awake()
     {
         SpawnBoids();
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         UpdateBoidPositions();
     }
@@ -49,64 +56,69 @@ public class BoidManager : MonoBehaviour
 
         foreach (Boid b in boidList)
         {
-            Rule1 = Cohesion(b);
-            Rule2 = Separation(b);
-            Rule3 = Alignment(b);
-            Rule4 = BoundToArea(b);
-            b.Velocity = b.Velocity + Rule1 + Rule2 + Rule3 + Rule4;
+            b.Velocity += Cohesion(b) * CohesionDebug;
+            b.Velocity += Separation(b) * SeperationDebug;
+            b.Velocity += Alignment(b) * AlingmentDebug;
+            b.Velocity += BoundToArea(b);
+
+            Debug.Log( "RULE1" + this + Rule1);
+            Debug.Log("RULE2" + this + Rule2);
+            Debug.Log("RULE3" + this + Rule3);
 
             LimitSpeed(b);
+            b.transform.position += b.Velocity;
 
-            b.transform.position = b.transform.position + b.Velocity;
+            b.Velocity = Vector3.zero;
         }
     }
 
     private Vector3 Cohesion(Boid _CurrentBoid)
     {
-        Vector3 Center = new Vector3();
-        foreach (Boid b  in boidList)
+        Vector3 CohesionVector = new Vector3();
+        foreach (Boid OtherBoid in boidList)
         {
-            if (b.transform.position != Center)
+            if (_CurrentBoid.transform.position != CohesionVector)
             {
-                Center += b.transform.position;
+                //Count all of the postions onto one vector;
+                CohesionVector += _CurrentBoid.transform.position;
             }
-            Center /= boidAmount - 1;
         }
-        return (Center - _CurrentBoid.transform.position) / 100f;
+        //devide by all of the boids - the currentone
+        CohesionVector /= boidList.Count - 1;
+        return (CohesionVector - _CurrentBoid.transform.position) / CohesionValue;
     }
 
     private Vector3 Separation(Boid _CurrentBoid)
     {
-        Vector3 Center = new Vector3();
-        Center = Vector3.zero;
+        Vector3 SeparateVector = new Vector3();
+        SeparateVector = Vector3.zero;
 
-        foreach(Boid b in boidList)
+        foreach(Boid otherBoid in boidList)
         {
-            if (b !=  _CurrentBoid)
+            if (otherBoid.transform.position != _CurrentBoid.transform.position)
             {
-                if (Vector3.Distance(b.transform.position, _CurrentBoid.transform.position) < distancePerBoid)
+                //if a boid is close by then
+                if (Vector3.Distance(_CurrentBoid.transform.position, otherBoid.transform.position) < distancePerBoid)
                 {
-                    Center = Center - (b.transform.position - _CurrentBoid.transform.position);
+                    SeparateVector += (_CurrentBoid.transform.position - otherBoid.transform.position);
                 }
             }
         }
-        return Center;
+        return SeparateVector;
     }
 
     private Vector3 Alignment(Boid _CurrentBoid)
     {
-        Vector3 pvJ = new Vector3();
-
+        Vector3 AlignmentVector = new Vector3();
         foreach (Boid b in boidList)
         {
             if (b != _CurrentBoid)
             {
-                pvJ += b.Velocity;
+                AlignmentVector += b.Velocity;
             }
         }
-
-        pvJ /= boidAmount - 1;
-        return (pvJ - _CurrentBoid.Velocity) / 8;
+        AlignmentVector /= boidAmount - 1;
+        return (AlignmentVector - _CurrentBoid.Velocity) / AlingmentValue;
     }
 
     private void LimitSpeed(Boid _CurrentBoid)
