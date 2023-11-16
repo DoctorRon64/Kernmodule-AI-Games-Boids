@@ -6,19 +6,19 @@ public class BoidManager : MonoBehaviour
 {
     [Header("Spawning")]
     [SerializeField] private int boidAmount = 100;
-    [SerializeField] private float fieldSize = 1f;
+    [SerializeField] private float SpawnArea = 100f;
     [SerializeField] GameObject boidPrefab;
 
     [Header("Boids")]
     [SerializeField] private List<Boid> boidList;
     [SerializeField] private List<Transform> transformList;
-    [SerializeField] private float distancePerBoid;
-    [SerializeField] private float boundingEdgeSize = 10f;
-    [SerializeField] private float CohesionValue = 10f;
+
+    [SerializeField] private float distancePerBoid = .3f;
     [SerializeField] private float limitSpeedValue = 1f;
     [SerializeField] private float AlingmentValue = 8f;
+    [SerializeField] private float SphereRadius = 8f;
 
-    [Header("Boids")]
+	[Header("Boids")]
     [SerializeField] private float CohesionDebug;
     [SerializeField] private float SeperationDebug;
     [SerializeField] private float AlingmentDebug;
@@ -37,9 +37,9 @@ public class BoidManager : MonoBehaviour
     {
         for (int i = 0; i < boidAmount; i++)
         {
-            float x = Random.Range(0, fieldSize);
-            float z = Random.Range(0, fieldSize);
-            float y = Random.Range(0, fieldSize);
+            float x = Random.Range(0, SpawnArea);
+            float z = Random.Range(0, SpawnArea);
+            float y = Random.Range(0, SpawnArea);
             Vector3 BoidSpawnPos = new Vector3(x, y, z);
             Boid newBoid = Instantiate(boidPrefab, BoidSpawnPos, Quaternion.identity).GetComponent<Boid>();
             transformList.Add(newBoid.transform);
@@ -49,26 +49,34 @@ public class BoidManager : MonoBehaviour
 
     private void UpdateBoidPositions()
     {
-        Vector3 Rule1 = new Vector3();
-        Vector3 Rule2 = new Vector3();
-        Vector3 Rule3 = new Vector3();
-
         foreach (Boid b in boidList)
         {
             b.Velocity += Cohesion(b) * CohesionDebug;
             b.Velocity += Separation(b) * SeperationDebug;
             b.Velocity += Alignment(b) * AlingmentDebug;
 
-            Debug.Log( "RULE1"  + Rule1);
-            Debug.Log("RULE2"  + Rule2);
-            Debug.Log("RULE3"  + Rule3);
-
             LimitSpeed(b);
-            b.transform.position += b.Velocity;
+			ConstrainToBounds(b);
+
+			b.transform.position += b.Velocity;
         }
     }
 
-    private Vector3 Cohesion(Boid _CurrentBoid)
+	private void ConstrainToBounds(Boid _CurrentBoid)
+	{
+        float sphereRadius = SphereRadius;
+		Vector3 center = Vector3.zero;
+
+		float distanceToCenter = Vector3.Distance(_CurrentBoid.transform.position, center);
+
+		if (distanceToCenter > sphereRadius)
+		{
+			Vector3 toCenter = (center - _CurrentBoid.transform.position).normalized;
+			_CurrentBoid.Velocity += toCenter;
+		}
+	}
+
+	private Vector3 Cohesion(Boid _CurrentBoid)
     {
         Vector3 CohesionVector = Vector3.zero;
         foreach (Boid otherBoid in boidList)

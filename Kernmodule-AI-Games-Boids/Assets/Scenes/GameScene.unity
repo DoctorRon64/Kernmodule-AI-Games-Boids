@@ -210,7 +210,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 3, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -326,7 +326,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2077111401}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -342,19 +342,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 2077111401}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 936fbd5771b994a40a34d35ca4cd5280, type: 3}
+  m_Script: {fileID: 11500000, guid: 628817217027dd6418b3ceb61e516ab4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   boidAmount: 200
-  fieldSize: 10
-  boidPrefab: {fileID: 1863075945198889993, guid: d783ed48bd496b34aac69829fd1d491c, type: 3}
+  SpawnArea: 2
+  boidPrefab: {fileID: 1863075945198889993, guid: b816962c3e314944e86d0a7768e9203b, type: 3}
   boidList: []
   transformList: []
-  distancePerBoid: 3
-  boundingEdgeSize: 5
-  CohesionValue: 10
+  distancePerBoid: 0.3
   limitSpeedValue: 0.1
   AlingmentValue: 8
+  SphereRadius: 5
   CohesionDebug: 1
   SeperationDebug: 1
-  AlingmentDebug: 0.02
+  AlingmentDebug: 1.91
