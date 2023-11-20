@@ -16,10 +16,11 @@ public class BoidManager : MonoBehaviour
 	[Range(0f, 3f)] [SerializeField] private float CohesionDebug = 1f;
 	[Range(0f, 3f)] [SerializeField] private float SeperationDebug = 1f;
 	[Range(0f, 3f)] [SerializeField] private float AlingmentDebug = 1.9f;
-
-	private List<Boid> boidList;
-	private List<Transform> transformList;
 	private const float AlingmentValue = 8f;
+
+	[Header("Object List")]
+	public List<Boid> boidList;
+	public List<Transform> transformList;
 
 	private void Awake()
     {
@@ -40,10 +41,10 @@ public class BoidManager : MonoBehaviour
             float y = Random.Range(0, SpawnArea);
             Vector3 BoidSpawnPos = new Vector3(x, y, z);
             Boid newBoid = Instantiate(boidPrefab, BoidSpawnPos, Quaternion.identity).GetComponent<Boid>();
-            transformList.Add(newBoid.transform);
-            boidList.Add(newBoid);
-        }
-    }
+			transformList.Add(newBoid.transform);
+			boidList.Add(newBoid);
+		}
+	}
 
     private void UpdateBoidPositions()
     {
