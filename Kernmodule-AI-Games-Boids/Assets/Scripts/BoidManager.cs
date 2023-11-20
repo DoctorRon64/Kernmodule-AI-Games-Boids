@@ -5,25 +5,23 @@ using UnityEngine;
 public class BoidManager : MonoBehaviour
 {
     [Header("Spawning")]
-    [SerializeField] private int boidAmount = 100;
-    [SerializeField] private float SpawnArea = 100f;
-    [SerializeField] GameObject boidPrefab;
+	[SerializeField] GameObject boidPrefab;
+	[SerializeField] private int boidAmount = 100;
+    [Range(0f, 10f)][SerializeField] private float SpawnArea = 2f;
 
     [Header("Boids")]
-    [SerializeField] private List<Boid> boidList;
-    [SerializeField] private List<Transform> transformList;
+	[Range(0f, 3f)] [SerializeField] private float distancePerBoid = .3f;
+	[Range(0f, 1f)] [SerializeField] private float limitSpeedValue = .1f;
+	[Range(0f, 10f)][SerializeField] private float SphereRadius = 5f;
+	[Range(0f, 3f)] [SerializeField] private float CohesionDebug = 1f;
+	[Range(0f, 3f)] [SerializeField] private float SeperationDebug = 1f;
+	[Range(0f, 3f)] [SerializeField] private float AlingmentDebug = 1.9f;
 
-    [SerializeField] private float distancePerBoid = .3f;
-    [SerializeField] private float limitSpeedValue = 1f;
-    [SerializeField] private float AlingmentValue = 8f;
-    [SerializeField] private float SphereRadius = 8f;
+	private List<Boid> boidList;
+	private List<Transform> transformList;
+	private const float AlingmentValue = 8f;
 
-	[Header("Boids")]
-    [SerializeField] private float CohesionDebug;
-    [SerializeField] private float SeperationDebug;
-    [SerializeField] private float AlingmentDebug;
-
-    private void Awake()
+	private void Awake()
     {
         SpawnBoids();
     }

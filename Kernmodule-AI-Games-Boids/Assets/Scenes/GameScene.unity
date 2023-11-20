@@ -352,7 +352,6 @@ MonoBehaviour:
   transformList: []
   distancePerBoid: 0.3
   limitSpeedValue: 0.1
-  AlingmentValue: 8
   SphereRadius: 5
   CohesionDebug: 1
   SeperationDebug: 1
